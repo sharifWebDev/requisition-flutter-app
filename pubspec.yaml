@@ -1,0 +1,42 @@
+name: ratan_requisition
+description: "Requisition request application."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_inappwebview: ^6.1.5
+  google_mobile_ads: ^9.0.0
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.3
+  flutter_download_manager: ^0.5.5
+  url_launcher: ^6.3.2
+  shimmer: ^3.0.0
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1 # এখানে dev_dependencies এর আন্ডারে আনা হয়েছে
+
+flutter:
+  uses-material-design: true
+
+  # আপনার লোগো ফাইলটি অ্যাপের মেমোরিতে রেজিস্টার করার জন্য এসেট সেকশন অন করা হলো
+  assets:
+    - assets/images/app_logo.png
+
+# এটি থাকবে একদম বামে কোনো স্পেস ছাড়া (রুট লেভেলে)
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_logo.png"
+  min_sdk_android: 21
