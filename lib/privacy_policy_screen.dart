@@ -12,7 +12,7 @@ class PrivacyPolicyScreen extends StatefulWidget {
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     with SingleTickerProviderStateMixin {
-  final String privacyUrl = "https://ratanproducts.com/privacy";
+  final String privacyUrl = "https://sites.google.com/view/ratanproducts/privacy-policy";
   BannerAd? _bannerAd;
   bool _isBannerAdLoaded = false;
   late AnimationController _animationController;

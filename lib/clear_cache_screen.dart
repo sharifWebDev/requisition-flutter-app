@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // লোকাল স্টোরেজের জন্য ইমপোর্ট করা হলো
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ClearCacheScreen extends StatefulWidget {
   const ClearCacheScreen({super.key});
@@ -19,6 +19,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
   late AnimationController _animationController;
   late Animation<double> _pulseAnimation;
   late Animation<double> _fadeAnimation;
+  bool _isPageLoaded = false;
 
   // Cache statistics
   final Map<String, double> _cacheStats = {
@@ -35,20 +36,42 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
     super.initState();
     _initBannerAd();
     _initAnimations();
+
+    // Set page loaded after a short delay to trigger entrance animation
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) {
+        setState(() {
+          _isPageLoaded = true;
+        });
+        _animationController.forward(); // Start entrance animation
+      }
+    });
   }
 
   void _initAnimations() {
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     );
+
+    // Pulse animation - only active during cleaning or on user action
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
+
+    // Fade animation for page entrance
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
     );
+  }
+
+  void _startPulseAnimation() {
     _animationController.repeat(reverse: true);
+  }
+
+  void _stopPulseAnimation() {
+    _animationController.stop();
+    _animationController.reset();
   }
 
   void _initBannerAd() {
@@ -67,21 +90,17 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
     _bannerAd?.load();
   }
 
-  // =========================================================================
-  // লোকাল স্টোরেজ ও ওয়েবভিউ ক্যাশ ডিলিট করার অপ্টিমাইজড ফাংশন
-  // =========================================================================
   Future<void> _handleClearCache() async {
     setState(() {
       _isCleaning = true;
     });
+    _startPulseAnimation();
 
     try {
-      // ১. ওয়েবভিউয়ের ভেতরের সব ক্যাশ ডাটা ডিলিট
       if (Platform.isAndroid) {
         await WebStorageManager.instance().deleteAllData();
       }
 
-      // ২. আপনার রিকোয়েস্ট করা ৫টি লোকাল স্টোরেজ কী (Key) ডিলিট প্রসেস
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       final List<String> keysToRemove = [
@@ -99,7 +118,6 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
         }
       }
 
-      // ৩ সেকেন্ড প্রফেশনাল হোল্ড অ্যানিমেশন পিরিয়ড
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
@@ -115,6 +133,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
         setState(() {
           _isCleaning = false;
         });
+        _stopPulseAnimation();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -156,6 +175,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
         setState(() {
           _isCleaning = false;
         });
+        _stopPulseAnimation();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -184,23 +204,25 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: _buildAppBar(),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.white, Colors.grey.shade50],
-            ),
-          ),
-          child: SafeArea(
-            child: _isCleaning
-                ? _buildCleaningAnimation()
-                : _buildMainContent(),
-          ),
-        ),
-      ),
+      body: _isPageLoaded
+          ? FadeTransition(
+              opacity: _fadeAnimation,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.white, Colors.grey.shade50],
+                  ),
+                ),
+                child: SafeArea(
+                  child: _isCleaning
+                      ? _buildCleaningAnimation()
+                      : _buildMainContent(),
+                ),
+              ),
+            )
+          : const SizedBox.shrink(),
       bottomNavigationBar: _buildBottomAd(),
     );
   }
@@ -361,18 +383,10 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
                     ),
                   ],
                 ),
-                child: AnimatedBuilder(
-                  animation: _pulseAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _pulseAnimation.value,
-                      child: Icon(
-                        Icons.storage,
-                        color: Colors.orange.shade700,
-                        size: 32,
-                      ),
-                    );
-                  },
+                child: Icon(
+                  Icons.storage,
+                  color: Colors.orange.shade700,
+                  size: 32,
                 ),
               ),
               const SizedBox(width: 20),
