@@ -103,12 +103,7 @@ class _HomeScreenState extends State<HomeScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.deepPurple.shade400,
-                  Colors.deepPurple.shade800,
-                ],
-              ),
+              color: Colors.black,
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
@@ -160,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen>
       ],
     );
   }
- 
+
   Widget _buildActionCards() {
     return ListView(
       shrinkWrap: true,
