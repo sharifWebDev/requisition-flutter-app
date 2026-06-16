@@ -74,11 +74,12 @@ flutter run
 ![alt text](privacy-policy-1.png)
 ![alt text](privacy-policy-page-2.png)
 
- 
+---
+
 ````md
 # Flutter Useful Commands
 A collection of commonly used Flutter commands for project setup, dependency management, cleaning, running, and building applications.
-
+````
 ## Project Create
 
 ### Create New Flutter Project
