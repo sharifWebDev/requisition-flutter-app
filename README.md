@@ -1,20 +1,21 @@
-# ratan_requisition
+# Ratan Requisition
 
-A new Flutter project.
+Ratan Requisition is a Flutter application developed for managing organizational requisitions, approvals, and procurement workflows efficiently. The application provides a seamless experience for creating, tracking, and approving requisition requests across departments.
+
+## Key Features
+
+* Create and Manage Requisitions
+* Webview requesition form
+* Cache clear features
+* Image Upload Support
+* Mobile and Desktop Support
+* Privacy policy pages
+* API-Driven Architecture
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Please follow the installation and setup instructions provided below.
+ 
 
 ## 🚀 How to Setup and Run
 
@@ -53,6 +54,9 @@ flutter run --purge
 ```bash
 flutter run
 ```
+ 
+ ### Project UI
+
  
  
 ````md
