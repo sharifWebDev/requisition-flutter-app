@@ -136,7 +136,7 @@ class _WebViewScreenState extends State<WebViewScreen>
                 Text(
                   'We need storage access to download requisition documents and attachments.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey.shade600),
+                  style: TextStyle(color: const Color.fromARGB(255, 97, 97, 97)),
                 ),
                 const SizedBox(height: 24),
                 Row(
@@ -161,7 +161,7 @@ class _WebViewScreenState extends State<WebViewScreen>
                           openAppSettings();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple.shade700,
+                          backgroundColor: const Color.fromARGB(255, 214, 214, 214),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -320,13 +320,6 @@ class _WebViewScreenState extends State<WebViewScreen>
           decoration: BoxDecoration(
             color: Colors.deepPurple.shade50,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.deepPurple.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
           ),
           child: IconButton(
             icon: const Icon(Icons.arrow_back_rounded, size: 20),

@@ -14,6 +14,8 @@ class ClearCacheScreen extends StatefulWidget {
 class _ClearCacheScreenState extends State<ClearCacheScreen>
     with SingleTickerProviderStateMixin {
   bool _isCleaning = false;
+  bool _isCleanedSuccessfully =
+      false; // ক্যাশ সফলভাবে ক্লিয়ার করার স্টেট ট্র্যাকিং
   BannerAd? _bannerAd;
   bool _isBannerAdLoaded = false;
   late AnimationController _animationController;
@@ -72,6 +74,8 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
   void _stopPulseAnimation() {
     _animationController.stop();
     _animationController.reset();
+    // এন্ট্রান্স অ্যানিমেশন ভ্যালু ঠিক রাখার জন্য আবার ফরওয়ার্ড করে রাখা হলো
+    _animationController.value = 1.0;
   }
 
   void _initBannerAd() {
@@ -93,6 +97,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
   Future<void> _handleClearCache() async {
     setState(() {
       _isCleaning = true;
+      _isCleanedSuccessfully = false; // ক্লিয়ারিং প্রসেস শুরুর সময় রিসেট
     });
     _startPulseAnimation();
 
@@ -132,6 +137,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
       if (mounted) {
         setState(() {
           _isCleaning = false;
+          _isCleanedSuccessfully = true; // সফলভাবে শেষ হলে ট্রু হবে
         });
         _stopPulseAnimation();
 
@@ -218,6 +224,8 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
                 child: SafeArea(
                   child: _isCleaning
                       ? _buildCleaningAnimation()
+                      : _isCleanedSuccessfully
+                      ? _buildSuccessDoneState() // ক্লিয়ার শেষে এই ভিউটি লোড হবে
                       : _buildMainContent(),
                 ),
               ),
@@ -305,6 +313,75 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
           ),
         ),
       ],
+    );
+  }
+
+  // ==================== কাস্টম সাকসেস "Done." উইজেট সেকশন ====================
+  Widget _buildSuccessDoneState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // কাস্টম গ্রিন সাকসেস সার্কেল লোগো
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.green.shade100, width: 2),
+              ),
+              child: Icon(
+                Icons.task_alt_rounded, // সফলতার প্রফেশনাল লোগো
+                size: 80,
+                color: Colors.green.shade600,
+              ),
+            ),
+            const SizedBox(height: 24),
+            // আপনার রিকোয়েস্ট করা Done. টাইটেল
+            const Text(
+              'Done.',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // চমৎকার সাবটাইটেল ডেসক্রিপশন
+            Text(
+              'Your application cache and temporary form states have been completely wiped out. The storage space is now 100% optimized.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade600,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 40),
+            // হোম পেজে ফিরে যাওয়ার নেভিগেশন বাটন
+            SizedBox(
+              width: 180,
+              child: ElevatedButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.home_rounded, size: 18),
+                label: const Text('Back to Home'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
