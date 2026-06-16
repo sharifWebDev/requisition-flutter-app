@@ -55,9 +55,25 @@ flutter run --purge
 flutter run
 ```
  
- ### Project UI
+### Project UI
 
- 
+# Home Page
+![alt text](home-page.png)
+
+# Web-view Page
+![alt text](web-view-page.png)
+![alt text](web-view-page-2.png)
+![alt text](web-view-page-3.png)
+
+# Cache Clear Page
+![alt text](cache-clear-page-1.png)
+![alt text](cache-clear-page-1.5.png)
+![alt text](cache-clear-success-page.png)
+
+# Privacy-policy Page
+![alt text](privacy-policy-1.png)
+![alt text](privacy-policy-page-2.png)
+
  
 ````md
 # Flutter Useful Commands
