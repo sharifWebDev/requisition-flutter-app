@@ -11,6 +11,7 @@ Ratan Requisition is a Flutter application developed for managing organizational
 * Mobile and Desktop Support
 * Privacy policy pages
 * API-Driven Architecture
+* Admov ADS Show
 
 ## Getting Started
 

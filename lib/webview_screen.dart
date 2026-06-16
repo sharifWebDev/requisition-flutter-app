@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart'; // অ্যাডমব প্যাকেজ কমেন্ট আউট করা হলো
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
@@ -26,15 +26,15 @@ class _WebViewScreenState extends State<WebViewScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  // AdMob banner
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
+  // AdMob banner variables কমেন্ট আউট করা হলো
+  // BannerAd? _bannerAd;
+  // bool _isBannerAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _requestPermissions();
-    _initBannerAd();
+    // _initBannerAd(); // কমেন্ট আউট করা হলো
     _initAnimations();
     _initPullToRefresh();
   }
@@ -67,21 +67,21 @@ class _WebViewScreenState extends State<WebViewScreen>
     );
   }
 
-  void _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      listener: BannerAdListener(
-        onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          debugPrint('Ad failed to load: $error');
-        },
-      ),
-      request: const AdRequest(),
-    );
-    _bannerAd?.load();
-  }
+  // void _initBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.banner,
+  //     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
+  //       onAdFailedToLoad: (ad, error) {
+  //         ad.dispose();
+  //         debugPrint('Ad failed to load: $error');
+  //       },
+  //     ),
+  //     request: const AdRequest(),
+  //   );
+  //   _bannerAd?.load();
+  // }
 
   Future<void> _requestPermissions() async {
     if (Platform.isAndroid) {
@@ -136,7 +136,9 @@ class _WebViewScreenState extends State<WebViewScreen>
                 Text(
                   'We need storage access to download requisition documents and attachments.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: const Color.fromARGB(255, 97, 97, 97)),
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 97, 97, 97),
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Row(
@@ -161,7 +163,12 @@ class _WebViewScreenState extends State<WebViewScreen>
                           openAppSettings();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 214, 214, 214),
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            214,
+                            214,
+                            214,
+                          ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -282,7 +289,7 @@ class _WebViewScreenState extends State<WebViewScreen>
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    // _bannerAd?.dispose(); // কমেন্ট আউট করা হলো
     _animationController.dispose();
     super.dispose();
   }
@@ -546,6 +553,10 @@ class _WebViewScreenState extends State<WebViewScreen>
   }
 
   Widget _buildBottomAd() {
+    // সরাসরি ব্লাঙ্ক বা খালি উইজেট রিটার্ন করা হলো, স্ক্রিনের নিচের অংশের কোনো ফাঁকা জায়গা থাকবে না
+    return const SizedBox.shrink();
+
+    /*
     if (!_isBannerAdLoaded || _bannerAd == null) {
       return const SizedBox.shrink();
     }
@@ -573,5 +584,6 @@ class _WebViewScreenState extends State<WebViewScreen>
         ],
       ),
     );
+    */
   }
 }

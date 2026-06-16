@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart'; // অ্যাডমব প্যাকেজ কমেন্ট আউট করা হলো
 import 'package:shimmer/shimmer.dart';
 import 'webview_screen.dart';
 import 'clear_cache_screen.dart';
@@ -14,15 +14,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
+  // BannerAd? _bannerAd; // কমেন্ট আউট করা হলো
+  // bool _isBannerAdLoaded = false; // কমেন্ট আউট করা হলো
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _initBannerAd();
+    // _initBannerAd();
     _initAnimations();
   }
 
@@ -37,25 +37,25 @@ class _HomeScreenState extends State<HomeScreen>
     _animationController.forward();
   }
 
-  void _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      listener: BannerAdListener(
-        onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          debugPrint('Ad failed to load: $error');
-        },
-      ),
-      request: const AdRequest(),
-    );
-    _bannerAd?.load();
-  }
+  // void _initBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.banner,
+  //     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
+  //       onAdFailedToLoad: (ad, error) {
+  //         ad.dispose();
+  //         debugPrint('Ad failed to load: $error');
+  //       },
+  //     ),
+  //     request: const AdRequest(),
+  //   );
+  //   _bannerAd?.load();
+  // }
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    // _bannerAd?.dispose(); // কমেন্ট আউট করা হলো
     _animationController.dispose();
     super.dispose();
   }
@@ -300,6 +300,10 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildBottomAd() {
+    // যেহেতু বিজ্ঞাপন দেখাবেন না, তাই সরাসরি ব্লাঙ্ক বা খালি উইজেট রিটার্ন করা হলো //ads add korle ata delete korte hobe
+    return const SizedBox.shrink();
+
+    /* 
     if (!_isBannerAdLoaded || _bannerAd == null) {
       return const SizedBox.shrink();
     }
@@ -327,5 +331,6 @@ class _HomeScreenState extends State<HomeScreen>
         ],
       ),
     );
+    */
   }
 }

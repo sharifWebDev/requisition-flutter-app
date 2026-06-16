@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart'; // অ্যাডমব প্যাকেজ কমেন্ট আউট করা হলো
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -12,16 +12,17 @@ class PrivacyPolicyScreen extends StatefulWidget {
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     with SingleTickerProviderStateMixin {
-  final String privacyUrl = "https://sites.google.com/view/ratanproducts/privacy-policy";
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
+  final String privacyUrl =
+      "https://sites.google.com/view/ratanproducts/privacy-policy";
+  // BannerAd? _bannerAd; // কমেন্ট আউট করা হলো
+  // bool _isBannerAdLoaded = false; // কমেন্ট আউট করা হলো
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _initBannerAd();
+    // _initBannerAd(); // কমেন্ট আউট করা হলো
     _initAnimations();
   }
 
@@ -36,21 +37,21 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     _animationController.forward();
   }
 
-  void _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      listener: BannerAdListener(
-        onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          debugPrint('Ad failed to load: $error');
-        },
-      ),
-      request: const AdRequest(),
-    );
-    _bannerAd?.load();
-  }
+  // void _initBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.banner,
+  //     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
+  //       onAdFailedToLoad: (ad, error) {
+  //         ad.dispose();
+  //         debugPrint('Ad failed to load: $error');
+  //       },
+  //     ),
+  //     request: const AdRequest(),
+  //   );
+  //   _bannerAd?.load();
+  // }
 
   Future<void> _openPrivacyUrl(BuildContext context) async {
     final Uri url = Uri.parse(privacyUrl);
@@ -83,7 +84,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    // _bannerAd?.dispose(); // কমেন্ট আউট করা হলো
     _animationController.dispose();
     super.dispose();
   }
@@ -607,6 +608,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
   }
 
   Widget _buildBottomAd() {
+    // সরাসরি ব্লাঙ্ক বা খালি উইজেট রিটার্ন করা হলো, স্ক্রিনের নিচের অংশের কোনো ফাঁকা জায়গা থাকবে না
+    return const SizedBox.shrink();
+
+    /*
     if (!_isBannerAdLoaded || _bannerAd == null) {
       return const SizedBox.shrink();
     }
@@ -634,5 +639,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
         ],
       ),
     );
+    */
   }
 }

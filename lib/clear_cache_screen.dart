@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart'; // অ্যাডমব প্যাকেজ কমেন্ট আউট করা হলো
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClearCacheScreen extends StatefulWidget {
@@ -15,9 +15,9 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
     with SingleTickerProviderStateMixin {
   bool _isCleaning = false;
   bool _isCleanedSuccessfully =
-      false; // ক্যাশ সফলভাবে ক্লিয়ার করার স্টেট ট্র্যাকিং
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
+      false; // ক্যাশ সফলভাবে ক্লিয়ার করার স্টেট ট্র্যাকিং
+  // BannerAd? _bannerAd; // কমেন্ট আউট করা হলো
+  // bool _isBannerAdLoaded = false; // কমেন্ট আউট করা হলো
   late AnimationController _animationController;
   late Animation<double> _pulseAnimation;
   late Animation<double> _fadeAnimation;
@@ -36,7 +36,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
   @override
   void initState() {
     super.initState();
-    _initBannerAd();
+    // _initBannerAd(); // কমেন্ট আউট করা হলো
     _initAnimations();
 
     // Set page loaded after a short delay to trigger entrance animation
@@ -74,30 +74,30 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
   void _stopPulseAnimation() {
     _animationController.stop();
     _animationController.reset();
-    // এন্ট্রান্স অ্যানিমেশন ভ্যালু ঠিক রাখার জন্য আবার ফরওয়ার্ড করে রাখা হলো
+    // এন্ট্রান্স অ্যানিমেশন ভ্যালু ঠিক রাখার জন্য আবার ফরওয়ার্ড করে রাখা হলো
     _animationController.value = 1.0;
   }
 
-  void _initBannerAd() {
-    _bannerAd = BannerAd(
-      size: AdSize.banner,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-      listener: BannerAdListener(
-        onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          debugPrint('Ad failed to load: $error');
-        },
-      ),
-      request: const AdRequest(),
-    );
-    _bannerAd?.load();
-  }
+  // void _initBannerAd() {
+  //   _bannerAd = BannerAd(
+  //     size: AdSize.banner,
+  //     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  //     listener: BannerAdListener(
+  //       onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
+  //       onAdFailedToLoad: (ad, error) {
+  //         ad.dispose();
+  //         debugPrint('Ad failed to load: $error');
+  //       },
+  //     ),
+  //     request: const AdRequest(),
+  //   );
+  //   _bannerAd?.load();
+  // }
 
   Future<void> _handleClearCache() async {
     setState(() {
       _isCleaning = true;
-      _isCleanedSuccessfully = false; // ক্লিয়ারিং প্রসেস শুরুর সময় রিসেট
+      _isCleanedSuccessfully = false; // ক্লিয়ারিং প্রসেস শুরুর সময় রিসেট
     });
     _startPulseAnimation();
 
@@ -200,7 +200,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    // _bannerAd?.dispose(); // কমেন্ট আউট করা হলো
     _animationController.dispose();
     super.dispose();
   }
@@ -225,7 +225,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
                   child: _isCleaning
                       ? _buildCleaningAnimation()
                       : _isCleanedSuccessfully
-                      ? _buildSuccessDoneState() // ক্লিয়ার শেষে এই ভিউটি লোড হবে
+                      ? _buildSuccessDoneState() // ক্লিয়ার শেষে এই ভিউটি লোড হবে
                       : _buildMainContent(),
                 ),
               ),
@@ -339,7 +339,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
               ),
             ),
             const SizedBox(height: 24),
-            // আপনার রিকোয়েস্ট করা Done. টাইটেল
+            // আপনার রিকোয়েস্ট করা Done. টাইটেল
             const Text(
               'Done.',
               style: TextStyle(
@@ -361,7 +361,7 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
               ),
             ),
             const SizedBox(height: 40),
-            // হোম পেজে ফিরে যাওয়ার নেভিগেশন বাটন
+            // হোম পেজে ফিরে যাওয়ার নেভিগেশন বাটন
             SizedBox(
               width: 180,
               child: ElevatedButton.icon(
@@ -853,6 +853,10 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
   }
 
   Widget _buildBottomAd() {
+    // সরাসরি ব্লাঙ্ক বা খালি উইজেট রিটার্ন করা হলো, স্ক্রিনের নিচের অংশের কোনো ফাঁকা জায়গা থাকবে না
+    return const SizedBox.shrink();
+
+    /*
     if (!_isBannerAdLoaded || _bannerAd == null || _isCleaning) {
       return const SizedBox.shrink();
     }
@@ -880,5 +884,6 @@ class _ClearCacheScreenState extends State<ClearCacheScreen>
         ],
       ),
     );
+    */
   }
 }
