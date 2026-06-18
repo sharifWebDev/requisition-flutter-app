@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart'; // অ্যাডমব প্যাকেজ কমেন্ট আউট করা হলো
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({super.key});
@@ -14,15 +14,12 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     with SingleTickerProviderStateMixin {
   final String privacyUrl =
       "https://sites.google.com/view/ratanproducts/privacy-policy";
-  // BannerAd? _bannerAd; // কমেন্ট আউট করা হলো
-  // bool _isBannerAdLoaded = false; // কমেন্ট আউট করা হলো
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    // _initBannerAd(); // কমেন্ট আউট করা হলো
     _initAnimations();
   }
 
@@ -36,22 +33,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     );
     _animationController.forward();
   }
-
-  // void _initBannerAd() {
-  //   _bannerAd = BannerAd(
-  //     size: AdSize.banner,
-  //     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-  //     listener: BannerAdListener(
-  //       onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
-  //       onAdFailedToLoad: (ad, error) {
-  //         ad.dispose();
-  //         debugPrint('Ad failed to load: $error');
-  //       },
-  //     ),
-  //     request: const AdRequest(),
-  //   );
-  //   _bannerAd?.load();
-  // }
 
   Future<void> _openPrivacyUrl(BuildContext context) async {
     final Uri url = Uri.parse(privacyUrl);
@@ -84,7 +65,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
 
   @override
   void dispose() {
-    // _bannerAd?.dispose(); // কমেন্ট আউট করা হলো
     _animationController.dispose();
     super.dispose();
   }
@@ -128,7 +108,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomAd(),
+      bottomNavigationBar: const SizedBox.shrink(),
     );
   }
 
@@ -137,43 +117,50 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
       elevation: 0,
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.deepPurple.shade800,
-      leading: IconButton(
-        icon: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+      leading: Container(
+        margin: const EdgeInsets.only(left: 8),
+        child: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.arrow_back_rounded, size: 20),
           ),
-          child: const Icon(Icons.arrow_back_rounded, size: 20),
+          onPressed: () => Navigator.pop(context),
         ),
-        onPressed: () => Navigator.pop(context),
       ),
       title: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.green.shade400, Colors.green.shade700],
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.privacy_tip, color: Colors.white, size: 20),
+            child: const Icon(Icons.privacy_tip, color: Colors.white, size: 18),
           ),
-          const SizedBox(width: 12),
-          const Text(
-            'Privacy & Security',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              letterSpacing: -0.5,
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              'Privacy & Security',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.grey.shade800,
+                letterSpacing: -0.5,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -181,29 +168,29 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
       centerTitle: false,
       actions: [
         Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          margin: const EdgeInsets.only(right: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.green.shade50, Colors.green.shade100],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.green.shade200),
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.shield,
-                size: 16,
-                color: Colors.green.shade700,
-              ), // Fixed: Changed from verified_shield to shield
+              Icon(Icons.shield, size: 14, color: Colors.green.shade700),
               const SizedBox(width: 4),
-              Text(
-                'GDPR Compliant',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green.shade700,
+              Flexible(
+                child: Text(
+                  'GDPR Compliant',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green.shade700,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -219,8 +206,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
       children: [
         Text(
           'Data Protection',
-          style: TextStyle(
-            fontSize: 28,
+          style: GoogleFonts.inter(
+            fontSize: 26,
             fontWeight: FontWeight.bold,
             color: Colors.grey.shade800,
             letterSpacing: -0.5,
@@ -229,22 +216,22 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
         const SizedBox(height: 8),
         Text(
           'Your privacy is our priority. Learn how we protect your data.',
-          style: TextStyle(
-            fontSize: 15,
+          style: GoogleFonts.inter(
+            fontSize: 14,
             color: Colors.grey.shade600,
             letterSpacing: -0.3,
           ),
         ),
         const SizedBox(height: 24),
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [Colors.green.shade50, Colors.blue.shade50],
             ),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
@@ -257,10 +244,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.green.withOpacity(0.2),
@@ -271,18 +258,18 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
                 child: Icon(
                   Icons.security,
                   color: Colors.green.shade700,
-                  size: 40,
+                  size: 34,
                 ),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Enterprise Security',
-                      style: TextStyle(
-                        fontSize: 16,
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey.shade800,
                       ),
@@ -290,24 +277,24 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
                     const SizedBox(height: 4),
                     Text(
                       '256-bit SSL Encryption',
-                      style: TextStyle(
-                        fontSize: 13,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
                         color: Colors.grey.shade600,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     Row(
                       children: [
                         Icon(
                           Icons.check_circle,
-                          size: 14,
+                          size: 12,
                           color: Colors.green.shade600,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           'ISO 27001 Certified',
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: GoogleFonts.inter(
+                            fontSize: 11,
                             color: Colors.green.shade700,
                             fontWeight: FontWeight.w500,
                           ),
@@ -335,7 +322,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
             color: Colors.blue,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _buildBadge(
             icon: Icons.shield,
@@ -344,11 +331,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
             color: Colors.purple,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: _buildBadge(
-            icon: Icons
-                .verified_user, // Fixed: Changed from verified to verified_user
+            icon: Icons.verified_user,
             label: 'SOC 2',
             description: 'Type II',
             color: Colors.orange,
@@ -365,10 +351,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -380,25 +366,25 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 14,
+            style: GoogleFonts.inter(
+              fontSize: 13,
               fontWeight: FontWeight.bold,
               color: Colors.grey.shade800,
             ),
           ),
           Text(
             description,
-            style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+            style: GoogleFonts.inter(fontSize: 10, color: Colors.grey.shade600),
           ),
         ],
       ),
@@ -438,10 +424,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     ];
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -455,26 +441,26 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
         children: [
           Row(
             children: [
-              Icon(Icons.gavel, size: 20, color: Colors.green.shade600),
+              Icon(Icons.gavel, size: 18, color: Colors.green.shade600),
               const SizedBox(width: 8),
               Text(
                 'Privacy Commitments',
-                style: TextStyle(
-                  fontSize: 18,
+                style: GoogleFonts.inter(
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey.shade800,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           ...policies.asMap().entries.map(
             (entry) => Column(
               children: [
                 _buildPolicyCard(entry.value),
                 if (entry.key < policies.length - 1)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Divider(color: Colors.grey.shade200),
                   ),
               ],
@@ -490,22 +476,22 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: (policy['color'] as Color).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(policy['icon'], color: policy['color'], size: 24),
+          child: Icon(policy['icon'], color: policy['color'], size: 20),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 policy['title'],
-                style: TextStyle(
-                  fontSize: 16,
+                style: GoogleFonts.inter(
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Colors.grey.shade800,
                 ),
@@ -513,8 +499,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
               const SizedBox(height: 4),
               Text(
                 policy['description'],
-                style: TextStyle(
-                  fontSize: 13,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
                   color: Colors.grey.shade600,
                   height: 1.4,
                 ),
@@ -528,35 +514,35 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
 
   Widget _buildContactSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [Colors.grey.shade50, Colors.grey.shade100],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(Icons.email, size: 24, color: Colors.green.shade700),
+            child: Icon(Icons.email, size: 20, color: Colors.green.shade700),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Data Protection Officer',
-                  style: TextStyle(
-                    fontSize: 13,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey.shade700,
                   ),
@@ -564,8 +550,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
                 const SizedBox(height: 2),
                 Text(
                   'privacy@ratanproducts.com',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: Colors.green.shade700,
                   ),
@@ -573,7 +559,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
               ],
             ),
           ),
-          Icon(Icons.verified, color: Colors.green.shade600, size: 16),
+          Icon(Icons.verified, color: Colors.green.shade600, size: 14),
         ],
       ),
     );
@@ -583,62 +569,27 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        icon: const Icon(Icons.open_in_new, color: Colors.white, size: 20),
-        label: const Text(
+        icon: const Icon(Icons.open_in_new, color: Colors.white, size: 18),
+        label: Text(
           'Read Complete Privacy Policy',
-          style: TextStyle(
+          style: GoogleFonts.inter(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 15,
-            letterSpacing: 0.5,
+            fontSize: 14,
+            letterSpacing: 0.3,
           ),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green.shade700,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
         onPressed: () => _openPrivacyUrl(context),
       ),
     );
-  }
-
-  Widget _buildBottomAd() {
-    // সরাসরি ব্লাঙ্ক বা খালি উইজেট রিটার্ন করা হলো, স্ক্রিনের নিচের অংশের কোনো ফাঁকা জায়গা থাকবে না
-    return const SizedBox.shrink();
-
-    /*
-    if (!_isBannerAdLoaded || _bannerAd == null) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(height: 1, color: Colors.grey.shade200),
-          SizedBox(
-            height: _bannerAd!.size.height.toDouble(),
-            width: _bannerAd!.size.width.toDouble(),
-            child: AdWidget(ad: _bannerAd!),
-          ),
-        ],
-      ),
-    );
-    */
   }
 }

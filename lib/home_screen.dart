@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: const Color.fromARGB(0, 253, 253, 253),
       appBar: _buildAppBar(),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen>
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
-      foregroundColor: Colors.deepPurple.shade800,
+      foregroundColor: const Color.fromARGB(255, 250, 250, 250),
       title: Row(
         children: [
           Container(
