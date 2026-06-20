@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen>
           gradient: [Colors.deepPurple.shade400, Colors.deepPurple.shade700],
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const WebViewScreen()),
+            MaterialPageRoute(builder: (context) => WebViewScreen()),
           ),
           isPrimary: true,
         ),

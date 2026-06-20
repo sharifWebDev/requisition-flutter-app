@@ -1,5 +1,5 @@
-name: ratan_requisition
-description: "Requisition request application."
+name: jetlialogistics
+description: "Jetli Logistics requisition request app."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -21,6 +21,7 @@ dependencies:
   shimmer: ^3.0.0
   shared_preferences: ^2.5.5
   google_fonts: ^6.1.0
+  image_picker: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -33,11 +34,11 @@ flutter:
 
   # আপনার লোগো ফাইলটি অ্যাপের মেমোরিতে রেজিস্টার করার জন্য এসেট সেকশন অন করা হলো
   assets:
-    - assets/images/app_cover_logo.png
+    - assets/images/app_logo.png
 
 # এটি থাকবে একদম বামে কোনো স্পেস ছাড়া (রুট লেভেলে)
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/app_cover_logo.png"
+  image_path: "assets/images/app_logo.png"
   min_sdk_android: 21

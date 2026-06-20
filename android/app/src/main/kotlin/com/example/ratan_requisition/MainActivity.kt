@@ -1,4 +1,4 @@
-package com.example.ratan_requisition
+package com.jetlialogistics.officialapp
 
 import io.flutter.embedding.android.FlutterActivity
 

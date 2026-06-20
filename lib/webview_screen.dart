@@ -5,6 +5,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
+import 'package:image_picker/image_picker.dart'; // 🚀 ইমেজ পিকার প্যাকেজ ইম্পোর্ট করা হলো
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -67,22 +68,6 @@ class _WebViewScreenState extends State<WebViewScreen>
     );
   }
 
-  // void _initBannerAd() {
-  //   _bannerAd = BannerAd(
-  //     size: AdSize.banner,
-  //     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-  //     listener: BannerAdListener(
-  //       onAdLoaded: (ad) => setState(() => _isBannerAdLoaded = true),
-  //       onAdFailedToLoad: (ad, error) {
-  //         ad.dispose();
-  //         debugPrint('Ad failed to load: $error');
-  //       },
-  //     ),
-  //     request: const AdRequest(),
-  //   );
-  //   _bannerAd?.load();
-  // }
-
   Future<void> _requestPermissions() async {
     if (Platform.isAndroid) {
       final List<Permission> permissions = [
@@ -94,7 +79,6 @@ class _WebViewScreenState extends State<WebViewScreen>
       Map<Permission, PermissionStatus> statuses = await permissions.request();
 
       if (statuses[Permission.storage]?.isDenied == true) {
-        // Show explanation for storage permission
         if (mounted) {
           _showPermissionDialog();
         }
@@ -289,7 +273,6 @@ class _WebViewScreenState extends State<WebViewScreen>
 
   @override
   void dispose() {
-    // _bannerAd?.dispose(); // কমেন্ট আউট করা হলো
     _animationController.dispose();
     super.dispose();
   }
@@ -553,37 +536,6 @@ class _WebViewScreenState extends State<WebViewScreen>
   }
 
   Widget _buildBottomAd() {
-    // সরাসরি ব্লাঙ্ক বা খালি উইজেট রিটার্ন করা হলো, স্ক্রিনের নিচের অংশের কোনো ফাঁকা জায়গা থাকবে না
     return const SizedBox.shrink();
-
-    /*
-    if (!_isBannerAdLoaded || _bannerAd == null) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(height: 1, color: Colors.grey.shade200),
-          SizedBox(
-            height: _bannerAd!.size.height.toDouble(),
-            width: _bannerAd!.size.width.toDouble(),
-            child: AdWidget(ad: _bannerAd!),
-          ),
-        ],
-      ),
-    );
-    */
   }
 }
