@@ -75,7 +75,7 @@ A collection of commonly used Flutter commands for project setup, dependency man
 
 ```bash
 cd /var/www/
-flutter create ratan_requisition --org com.ratanproducts
+flutter create Jetlia Logistics --org com.ratanproducts
 ```
 
 ---

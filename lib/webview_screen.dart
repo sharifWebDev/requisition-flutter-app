@@ -62,7 +62,7 @@ class _WebViewScreenState extends State<WebViewScreen>
     pullToRefreshController = PullToRefreshController(
       settings: PullToRefreshSettings(
         color: Colors.deepPurple,
-        backgroundColor: Colors.white
+        backgroundColor: Colors.white,
       ),
       onRefresh: () async {
         _refreshPage();
@@ -639,27 +639,7 @@ class _WebViewScreenState extends State<WebViewScreen>
       elevation: 0,
       backgroundColor: Colors.white,
       foregroundColor: Colors.deepPurple.shade800,
-      leadingWidth: 80,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.deepPurple.shade50,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded, size: 20),
-            color: Colors.deepPurple.shade700,
-            onPressed: () async {
-              if (await webViewController?.canGoBack() ?? false) {
-                webViewController?.goBack();
-              } else {
-                if (context.mounted) Navigator.of(context).pop();
-              }
-            },
-          ),
-        ),
-      ),
+      // Removed leading and leadingWidth
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -687,7 +667,7 @@ class _WebViewScreenState extends State<WebViewScreen>
             ),
         ],
       ),
-      centerTitle: false,
+      centerTitle: true, // Centered the title
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 16),
@@ -770,7 +750,7 @@ class _WebViewScreenState extends State<WebViewScreen>
               _progress = 100;
               currentTitle = (webTitle != null && webTitle.isNotEmpty)
                   ? webTitle
-                  : "Enterprise Requisition System";
+                  : "Requisition System";
               isError = false;
               retryCount = 0;
             });
@@ -856,7 +836,7 @@ class _WebViewScreenState extends State<WebViewScreen>
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  'Loading Enterprise System',
+                  'Loading Requisition Form',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

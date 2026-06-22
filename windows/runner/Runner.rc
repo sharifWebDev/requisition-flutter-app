@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.ratanproducts" "\0"
-            VALUE "FileDescription", "ratan_requisition" "\0"
+            VALUE "FileDescription", "jetlialogistics" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "ratan_requisition" "\0"
+            VALUE "InternalName", "jetlialogistics" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.ratanproducts. All rights reserved." "\0"
-            VALUE "OriginalFilename", "ratan_requisition.exe" "\0"
-            VALUE "ProductName", "ratan_requisition" "\0"
+            VALUE "OriginalFilename", "jetlialogistics.exe" "\0"
+            VALUE "ProductName", "jetlialogistics" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
