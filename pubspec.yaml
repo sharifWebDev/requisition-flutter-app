@@ -2,7 +2,7 @@ name: jetlialogistics
 description: "Jetli Logistics requisition request app."
 publish_to: 'none'
 
-version: 1.0.1+2
+version: 2.3.0+4
 
 environment:
   sdk: ^3.11.1
