@@ -1,10 +1,6 @@
-import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -34,13 +30,14 @@ class _WebViewScreenState extends State<WebViewScreen>
   final int maxRetries = 3;
   Timer? _retryTimer;
   bool isOffline = false;
+  // FIX 1: Changed the subscription type to List<ConnectivityResult>
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
     _initAnimations();
     _initPullToRefresh();
-    _requestPermissions();
     _checkConnectivity();
     _initializeWebView();
   }
@@ -74,283 +71,32 @@ class _WebViewScreenState extends State<WebViewScreen>
     // Initial setup done via build
   }
 
+  bool hasConnection(List<ConnectivityResult> results) {
+    return results.any((r) => r != ConnectivityResult.none);
+  }
+
   Future<void> _checkConnectivity() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
+    final connectivityResults = await Connectivity().checkConnectivity();
+
+    if (!mounted) return;
+
     setState(() {
-      isOffline = connectivityResult == ConnectivityResult.none;
+      isOffline = !hasConnection(connectivityResults);
     });
 
-    Connectivity().onConnectivityChanged.listen((result) {
+    // FIX 2: Listen to the stream with the correct type
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen((results) {
+      if (!mounted) return;
+
       setState(() {
-        isOffline = result == ConnectivityResult.none;
+        isOffline = !hasConnection(results);
       });
+
       if (!isOffline && isError) {
         _retryLoading();
       }
     });
-  }
-
-  Future<void> _requestPermissions() async {
-    if (Platform.isAndroid) {
-      final permissions = [
-        Permission.storage,
-        Permission.photos,
-        Permission.manageExternalStorage,
-      ];
-
-      final statuses = await permissions.request();
-
-      if (statuses[Permission.storage]?.isDenied == true) {
-        if (mounted) {
-          _showPermissionDialog();
-        }
-      }
-    }
-  }
-
-  void _showPermissionDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.deepPurple.shade400,
-                        Colors.deepPurple.shade700,
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.storage,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Storage Permission Required',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'We need storage access to download requisition documents and attachments securely.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          side: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.black87),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          openAppSettings();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple.shade700,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          'Open Settings',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _downloadFile(String url) async {
-    final status = await Permission.storage.request();
-    if (status.isGranted) {
-      try {
-        Directory? downloadsDirectory =
-            await getExternalStorageDirectory() ??
-            await getApplicationDocumentsDirectory();
-
-        final fileName = url.split('/').last.split('?').first;
-        final savePath = "${downloadsDirectory.path}/$fileName";
-
-        // Show download progress
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'Downloading...',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        fileName,
-                        style: const TextStyle(fontSize: 12),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.deepPurple.shade700,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-            duration: const Duration(seconds: 10),
-          ),
-        );
-
-        final dlManager = DownloadManager();
-        await dlManager.addDownload(url, savePath);
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check,
-                      color: Colors.green,
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      'File downloaded successfully!',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              backgroundColor: Colors.green.shade700,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.all(16),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.white),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Download Failed: ${e.toString()}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              backgroundColor: Colors.red.shade700,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.all(16),
-              duration: const Duration(seconds: 4),
-            ),
-          );
-        }
-      }
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text(
-              'Storage permission required for downloads',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: Colors.orange.shade700,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(16),
-            action: SnackBarAction(
-              label: 'Grant',
-              textColor: Colors.white,
-              onPressed: () => openAppSettings(),
-            ),
-          ),
-        );
-      }
-    }
   }
 
   void _refreshPage() {
@@ -391,7 +137,7 @@ class _WebViewScreenState extends State<WebViewScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Retry attempt ${retryCount}/$maxRetries',
+              'Retry attempt $retryCount/$maxRetries',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             backgroundColor: Colors.blue.shade700,
@@ -463,9 +209,18 @@ class _WebViewScreenState extends State<WebViewScreen>
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
-                      _checkConnectivity();
+
+                      final connectivityResults =
+                          await Connectivity().checkConnectivity();
+
+                      if (!mounted) return;
+
+                      setState(() {
+                        isOffline = !hasConnection(connectivityResults);
+                      });
+
                       if (!isOffline) {
                         _retryLoading();
                       }
@@ -610,6 +365,7 @@ class _WebViewScreenState extends State<WebViewScreen>
   void dispose() {
     _animationController.dispose();
     _retryTimer?.cancel();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 
@@ -639,7 +395,6 @@ class _WebViewScreenState extends State<WebViewScreen>
       elevation: 0,
       backgroundColor: Colors.white,
       foregroundColor: Colors.deepPurple.shade800,
-      // Removed leading and leadingWidth
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -667,7 +422,7 @@ class _WebViewScreenState extends State<WebViewScreen>
             ),
         ],
       ),
-      centerTitle: true, // Centered the title
+      centerTitle: true,
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 16),
@@ -720,7 +475,6 @@ class _WebViewScreenState extends State<WebViewScreen>
             displayZoomControls: false,
             allowFileAccessFromFileURLs: true,
             allowUniversalAccessFromFileURLs: true,
-            useOnDownloadStart: true,
             javaScriptEnabled: true,
             domStorageEnabled: true,
             databaseEnabled: true,
@@ -769,22 +523,18 @@ class _WebViewScreenState extends State<WebViewScreen>
               pullToRefreshController?.endRefreshing();
             }
           },
-          onDownloadStartRequest: (controller, downloadStartRequest) async {
-            await _downloadFile(downloadStartRequest.url.toString());
-          },
           shouldOverrideUrlLoading: (controller, navigationAction) async {
             return NavigationActionPolicy.ALLOW;
           },
-          onLoadError: (controller, url, code, message) {
+          onReceivedError: (controller, request, error) {
             pullToRefreshController?.endRefreshing();
             _handleLoadError();
           },
-          onLoadHttpError: (controller, url, statusCode, description) {
+          onReceivedHttpError: (controller, request, response) {
             pullToRefreshController?.endRefreshing();
             _handleLoadError();
           },
           onConsoleMessage: (controller, consoleMessage) {
-            // Handle console messages for debugging
             debugPrint('WebView Console: ${consoleMessage.message}');
           },
         ),
@@ -806,7 +556,6 @@ class _WebViewScreenState extends State<WebViewScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Main loading indicator
                 Container(
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
@@ -819,7 +568,7 @@ class _WebViewScreenState extends State<WebViewScreen>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.deepPurple.withOpacity(0.3),
+                        color: Colors.deepPurple.shade900.withAlpha(80),
                         blurRadius: 30,
                         spreadRadius: 10,
                       ),
@@ -1056,11 +805,15 @@ class _WebViewScreenState extends State<WebViewScreen>
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    final connectivityResult = await Connectivity()
-                        .checkConnectivity();
+                    final connectivityResults =
+                        await Connectivity().checkConnectivity();
+
+                    if (!mounted) return;
+
                     setState(() {
-                      isOffline = connectivityResult == ConnectivityResult.none;
+                      isOffline = !hasConnection(connectivityResults);
                     });
+
                     if (!isOffline) {
                       _refreshPage();
                     }
